@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+
+import React from 'react';
+import { Switch, Route, useLocation} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+import Add from './components/AddScreen/Add';
+import Edit from './components/EditScreen/Edit';
+import Home from './components/HomeScreen/Home';
+import View from './components/ViewScreen/View';
+import { getListStudents } from './actions/students';
 
 function App() {
+
+  const dispatch = useDispatch();
+  let location = useLocation();
+
+  React.useEffect(() => {
+    dispatch(getListStudents());
+  });
+
+  React.useEffect(() => {
+    if(location.pathname !== '/edit' && location.pathname !== '/view'){
+      localStorage.removeItem("student");
+    }
+  },[location]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Switch>
+        <Route path='/' exact>
+          <Home/>
+        </Route>  
+        <Route path='/add'>
+          <Add/>
+        </Route>
+        <Route path='/edit'>
+          <Edit/>
+        </Route>
+        <Route path='/view'>
+          <View/>
+        </Route>
+      </Switch>
   );
 }
 
